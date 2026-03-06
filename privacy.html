@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Usage Widget — Privacy Policy</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; color: #1a1a1a; line-height: 1.7; }
+    h1 { font-size: 1.75rem; margin-bottom: 0.25rem; }
+    .subtitle { color: #555; margin-top: 0; margin-bottom: 2.5rem; }
+    h2 { font-size: 1.15rem; margin-top: 2rem; border-bottom: 1px solid #eee; padding-bottom: 0.4rem; }
+    p, li { font-size: 0.97rem; }
+    ul { padding-left: 1.4rem; }
+    a { color: #0070f3; }
+    footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.85rem; color: #888; }
+  </style>
+</head>
+<body>
+  <h1>Claude Usage Widget</h1>
+  <p class="subtitle">Privacy Policy &mdash; Effective March 6, 2026</p>
+
+  <h2>Overview</h2>
+  <p>Claude Usage Widget is a home screen widget for iOS that displays your Claude.ai usage statistics. We are committed to protecting your privacy. This policy explains what data the app accesses, how it is used, and how it is protected.</p>
+
+  <h2>Data We Collect</h2>
+  <p>We do not collect, store, or transmit any personal data to our own servers. The app operates entirely on your device.</p>
+
+  <p>The app accesses and stores the following data <strong>locally on your device only</strong>:</p>
+  <ul>
+    <li><strong>Claude.ai session key</strong> &mdash; Your authentication session cookie from Claude.ai, stored securely in the iOS Keychain. This is used solely to authenticate requests to Claude.ai's own API on your behalf. It is never transmitted anywhere other than directly to <code>claude.ai</code>.</li>
+    <li><strong>Chart preference</strong> &mdash; Your preferred chart style, stored in UserDefaults shared between the app and its widget extension.</li>
+  </ul>
+
+  <h2>Data Transmitted to Third Parties</h2>
+  <p>The app makes authenticated HTTPS requests to the following endpoint operated by Anthropic:</p>
+  <ul>
+    <li><code>https://claude.ai/api/organizations/&lt;your-org-id&gt;/usage</code></li>
+  </ul>
+  <p>These requests are made using your session key cookie to retrieve your usage statistics. No other data is sent. The app does not transmit any data to any other third party.</p>
+  <p>Anthropic's own privacy policy governs their handling of this data: <a href="https://www.anthropic.com/privacy">anthropic.com/privacy</a>.</p>
+
+  <h2>Data Retention</h2>
+  <p>Your session key is retained in the iOS Keychain until you sign out via the app's Settings screen. Usage statistics are fetched live and not stored beyond the widget's display cache, which is managed by iOS.</p>
+
+  <h2>Analytics and Tracking</h2>
+  <p>This app contains no analytics SDKs, advertising SDKs, crash reporting services, or any form of tracking. We do not use the Advertising Identifier (IDFA).</p>
+
+  <h2>Children's Privacy</h2>
+  <p>This app is not directed at children under 13 and does not knowingly collect data from children.</p>
+
+  <h2>Changes to This Policy</h2>
+  <p>If we make material changes to this privacy policy, we will update the effective date above. Continued use of the app constitutes acceptance of any updated policy.</p>
+
+  <h2>Contact</h2>
+  <p>If you have questions about this privacy policy, please open an issue on our <a href="https://github.com/exceptionraiser/claude-usage-ios">GitHub repository</a>.</p>
+
+  <footer style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+    <span>&copy; 2026 Claude Usage Limit Widget</span>
+    <span>
+      <a href="index.html">Home</a> &nbsp;&middot;&nbsp;
+      <a href="support.html">Support</a> &nbsp;&middot;&nbsp;
+      <a href="https://github.com/exceptionraiser/claude-usage-ios">GitHub</a>
+    </span>
+  </footer>
+</body>
+</html>
