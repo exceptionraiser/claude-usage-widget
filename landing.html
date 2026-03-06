@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Usage Limit Widget — iOS Home Screen Widget</title>
+  <meta name="description" content="See your Claude.ai usage limits at a glance — right on your iPhone home screen. Beautiful widgets that auto-refresh every 15 minutes." />
+  <meta property="og:title" content="Claude Usage Limit Widget" />
+  <meta property="og:description" content="See your Claude.ai usage limits at a glance — right on your iPhone home screen." />
+  <meta property="og:image" content="screenshots/01_large_widget_light.png" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0d0b1a;
+      --bg2:      #13102a;
+      --accent:   #e8793a;
+      --accent2:  #f0a06a;
+      --text:     #f0eeff;
+      --muted:    #9e9ab8;
+      --card:     rgba(255,255,255,0.05);
+      --border:   rgba(255,255,255,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(13,11,26,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand { font-weight: 700; font-size: 1rem; letter-spacing: -0.01em; }
+    .nav-brand span { color: var(--accent); }
+    .nav-links { display: flex; gap: 1.75rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color .2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #fff;
+      padding: 0.5rem 1.2rem; border-radius: 100px;
+      text-decoration: none; font-size: 0.875rem; font-weight: 600;
+      transition: background .2s, transform .15s;
+    }
+    .nav-cta:hover { background: var(--accent2); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 6rem 1.5rem 4rem;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(108,70,200,0.25) 0%, transparent 70%);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(232,121,58,0.15);
+      color: var(--accent);
+      border: 1px solid rgba(232,121,58,0.3);
+      padding: 0.3rem 1rem; border-radius: 100px;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em;
+      text-transform: uppercase; margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 800; letter-spacing: -0.03em; line-height: 1.1;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero p {
+      color: var(--muted); font-size: clamp(1rem, 2.5vw, 1.2rem);
+      max-width: 520px; margin: 0 auto 2.5rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--accent); color: #fff;
+      padding: 0.85rem 1.75rem; border-radius: 100px;
+      text-decoration: none; font-weight: 700; font-size: 1rem;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 24px rgba(232,121,58,0.35);
+    }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(232,121,58,0.45); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      border: 1px solid var(--border); color: var(--muted);
+      padding: 0.85rem 1.75rem; border-radius: 100px;
+      text-decoration: none; font-weight: 600; font-size: 1rem;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-secondary:hover { border-color: var(--muted); color: var(--text); }
+
+    /* ── SCREENSHOTS ── */
+    .screenshots {
+      display: flex; gap: 1.5rem; justify-content: center;
+      padding: 4rem 1.5rem 5rem;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
+    .screenshots img {
+      width: 220px; flex-shrink: 0;
+      border-radius: 28px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06);
+      transition: transform .3s;
+    }
+    .screenshots img:hover { transform: translateY(-8px) scale(1.02); }
+    .screenshots img:nth-child(even) { margin-top: 2rem; }
+
+    /* ── FEATURES ── */
+    .features {
+      padding: 5rem 1.5rem;
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .section-label {
+      text-align: center; color: var(--accent);
+      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 0.75rem;
+    }
+    .section-title {
+      text-align: center; font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem;
+    }
+    .section-sub {
+      text-align: center; color: var(--muted); font-size: 1rem;
+      max-width: 480px; margin: 0 auto 3.5rem;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem; max-width: 960px; margin: 0 auto;
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 1.75rem;
+      transition: border-color .2s, background .2s;
+    }
+    .feature-card:hover {
+      border-color: rgba(232,121,58,0.3);
+      background: rgba(232,121,58,0.04);
+    }
+    .feature-icon { font-size: 1.75rem; margin-bottom: 1rem; }
+    .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .feature-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.55; }
+
+    /* ── PRIVACY STRIP ── */
+    .privacy-strip {
+      text-align: center; padding: 5rem 1.5rem;
+      background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(108,70,200,0.15) 0%, transparent 70%);
+    }
+    .privacy-strip h2 {
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.75rem;
+    }
+    .privacy-strip p { color: var(--muted); max-width: 480px; margin: 0 auto 2rem; }
+    .privacy-badges { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .privacy-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--card); border: 1px solid var(--border);
+      padding: 0.5rem 1rem; border-radius: 100px;
+      font-size: 0.85rem; color: var(--muted);
+    }
+    .privacy-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+      max-width: 960px; margin: 0 auto;
+      font-size: 0.85rem; color: var(--muted);
+    }
+    footer a { color: var(--muted); text-decoration: none; transition: color .2s; }
+    footer a:hover { color: var(--text); }
+    .footer-links { display: flex; gap: 1.5rem; }
+
+    @media (max-width: 640px) {
+      nav { padding: 0.875rem 1.25rem; }
+      .nav-links { display: none; }
+      .screenshots img { width: 180px; }
+      footer { flex-direction: column; text-align: center; }
+      .footer-links { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-brand">Claude Usage <span>Widget</span></div>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="support.html">Support</a></li>
+      <li><a href="index.html">Privacy</a></li>
+    </ul>
+    <a class="nav-cta" href="https://apps.apple.com/app/id6760186563">Download — $1.99</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">Available on the App Store</div>
+    <h1>Your Claude limits,<br><em>always in view</em></h1>
+    <p>A beautiful iOS home screen widget that shows your Claude.ai usage in real time — no more opening the app to check if you're close to your limit.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="https://apps.apple.com/app/id6760186563">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        Download on App Store
+      </a>
+      <a class="btn-secondary" href="support.html">Learn more</a>
+    </div>
+  </section>
+
+  <!-- SCREENSHOTS -->
+  <section class="screenshots" aria-label="App screenshots">
+    <img src="screenshots/01_large_widget_light.png" alt="Large widget showing 5-Hour, 7-Day, and Sonnet usage in light mode" loading="lazy" />
+    <img src="screenshots/02_medium_widget_light.png" alt="Medium widget on home screen in light mode" loading="lazy" />
+    <img src="screenshots/03_large_widget_dark.png"  alt="Large widget in dark mode" loading="lazy" />
+    <img src="screenshots/04_medium_widget_dark.png" alt="Medium widget in dark mode" loading="lazy" />
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <p class="section-label">Features</p>
+    <h2 class="section-title">Everything you need,<br>nothing you don't</h2>
+    <p class="section-sub">Built to be glanceable. No account required beyond your existing Claude subscription.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Auto-Refreshes Every 15 Minutes</h3>
+        <p>iOS updates the widget automatically in the background so your limits are always current.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Multiple Chart Styles</h3>
+        <p>Radial gauge, horizontal bar, waffle chart, lollipop — pick the style that suits your home screen.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌙</div>
+        <h3>Light &amp; Dark Mode</h3>
+        <p>Automatically matches your iOS appearance. Looks sharp day or night.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📐</div>
+        <h3>Small, Medium &amp; Large</h3>
+        <p>Three widget sizes so you can fit it wherever works best on your home screen.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔑</div>
+        <h3>One-Tap Sign In</h3>
+        <p>Log in with your Claude.ai account once. No copying session keys or digging through developer tools.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⏱</div>
+        <h3>Reset Countdown</h3>
+        <p>See exactly how long until each usage window resets — 5-hour, 7-day, Sonnet, and Opus.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY -->
+  <section class="privacy-strip">
+    <h2>Private by design</h2>
+    <p>Your session key stays on your device in the iOS Keychain. We never collect, store, or sell your data.</p>
+    <div class="privacy-badges">
+      <span class="privacy-badge"><span class="dot"></span>No analytics</span>
+      <span class="privacy-badge"><span class="dot"></span>No tracking</span>
+      <span class="privacy-badge"><span class="dot"></span>No third-party SDKs</span>
+      <span class="privacy-badge"><span class="dot"></span>Keychain storage</span>
+    </div>
+    <br>
+    <a class="btn-secondary" href="index.html" style="display:inline-flex;">Read the privacy policy</a>
+  </section>
+
+  <footer>
+    <span>&copy; 2026 Claude Usage Limit Widget &nbsp;&middot;&nbsp; $1.99 one-time purchase</span>
+    <div class="footer-links">
+      <a href="support.html">Support</a>
+      <a href="index.html">Privacy Policy</a>
+      <a href="https://github.com/exceptionraiser/claude-usage-ios">GitHub</a>
+    </div>
+  </footer>
+
+</body>
+</html>
